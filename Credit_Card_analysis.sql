@@ -1,6 +1,6 @@
 select * from credit_card_transcations
 
---1-write a query to print top 5 cities with highest spends 
+--1-Query to print top 5 cities with highest spends 
 --and their percentage contribution of total credit card spends 
 ;
 with cte1 as (
@@ -12,7 +12,7 @@ select top 5 cte1.*, round(total_spend*1.0/total_amount * 100,2) as percentage_c
 cte1 inner join total_spent on 1=1
 order by total_spend desc
 
---2- write a query to print highest spend month and amount spent in that month for each card type
+--2- Query to print highest spend month and amount spent in that month for each card type
 with cte as (
 select card_type,datepart(year,transaction_date) yt
 ,datepart(month,transaction_date) mt,sum(amount) as total_spend
@@ -23,7 +23,7 @@ group by card_type,datepart(year,transaction_date),datepart(month,transaction_da
 select * from (select *, rank() over(partition by card_type order by total_spend desc) as rn
 from cte) a where rn=1
 
---3- write a query to print the transaction details(all columns from the table) for each card type when
+--3- Query to print the transaction details(all columns from the table) for each card type when
 --it reaches a cumulative of  1,000,000 total spends(We should have 4 rows in the o/p one for each card type)
 
 with cte as (
@@ -34,7 +34,7 @@ from credit_card_transcations
 select * from (select *, rank() over(partition by card_type order by total_spend) as rn  
 from cte where total_spend >= 1000000) a where rn=1
 
---4- write a query to find city which had lowest percentage spend for gold card type
+--4- Query to find city which had lowest percentage spend for gold card type
 with cte as (
 select top 1 city,card_type,sum(amount) as amount
 ,sum(case when card_type='Gold' then amount end) as gold_amount
@@ -62,7 +62,7 @@ from
 from cte) A
 group by city;
 
---6- write a query to find percentage contribution of spends by females for each expense type
+--6- Query to find percentage contribution of spends by females for each expense type
 select exp_type,
 sum(case when gender='F' then amount else 0 end)*1.0/sum(amount) as percentage_female_contribution
 from credit_card_transcations
